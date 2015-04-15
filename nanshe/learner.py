@@ -28,7 +28,7 @@ __date__ = "$Apr 09, 2014 16:00:40 EDT$"
 import os
 import json
 import itertools
-import multiprocessing
+import multiprocessing as mp
 import subprocess
 import time
 
@@ -78,20 +78,19 @@ def generate_neurons_io_handler(input_filename,
             parameters_filename     JSON filename with parameters.
     """
 
+
     # Extract and validate file extensions.
 
     # Parse parameter filename and validate that the name is acceptable
     parameters_filename_details = pathHelpers.PathComponents(
         parameters_filename
     )
-    parameters_filename_ext = parameters_filename_details.extension
-    parameters_filename_ext = parameters_filename_ext.lower().lstrip(os.extsep)
     # Clean up the extension so it fits the standard.
-    if (parameters_filename_ext not in ["json"]):
+    if (parameters_filename_details.extension.lower().lstrip(os.extsep) not in ["json"]):
         raise Exception(
             "Parameter file with filename: \"" + parameters_filename + "\"" +
             " provided with an unknown file extension: \"" +
-            parameters_filename_ext + "\". If it is a " +
+            parameters_filename_details.extension + "\". If it is a " +
             "supported format, please run the given file through " +
             "nanshe_converter first before proceeding."
         )
@@ -128,18 +127,17 @@ def generate_neurons_a_block(input_filename,
             parameters              how the run should be configured.
     """
 
+
     # Extract and validate file extensions.
 
     # Parse input filename and validate that the name is acceptable
     input_filename_details = pathHelpers.PathComponents(input_filename)
     # Clean up the extension so it fits the standard.
-    input_filename_ext = input_filename_details.extension
-    input_filename_ext = input_filename_ext.lower().lstrip(os.extsep)
-    if (input_filename_ext not in ["h5", "hdf5", "he5"]):
+    if (input_filename_details.extension.lower().lstrip(os.extsep) not in ["h5", "hdf5", "he5"]):
         raise Exception(
             "Input file with filename: \"" + input_filename + "\"" +
             " provided with an unknown file extension: \"" +
-            input_filename_ext + "\". If it is a supported " +
+            input_filename_details.extension + "\". If it is a supported " +
             "format, please run the given file through " +
             "nanshe_converter first before proceeding."
         )
@@ -147,13 +145,11 @@ def generate_neurons_a_block(input_filename,
     # Parse output filename and validate that the name is acceptable
     output_filename_details = pathHelpers.PathComponents(output_filename)
     # Clean up the extension so it fits the standard.
-    output_filename_ext = output_filename_details.extension
-    output_filename_ext = output_filename_ext.lower().lstrip(os.extsep)
-    if (output_filename_ext not in ["h5", "hdf5", "he5"]):
+    if (output_filename_details.extension.lower().lstrip(os.extsep) not in ["h5", "hdf5", "he5"]):
         raise Exception(
             "Output file with filename: \"" + output_filename + "\"" +
             " provided with an unknown file extension: \"" +
-            output_filename_ext + "\". If it is a supported " +
+            output_filename_details.extension + "\". If it is a supported " +
             "format, please run the given file through nanshe_converter " +
             "first before proceeding."
         )
@@ -226,7 +222,7 @@ def generate_neurons_a_block(input_filename,
 @prof.log_call(trace_logger)
 def generate_neurons_blocks(input_filename,
                             output_filename,
-                            num_processes=multiprocessing.cpu_count(),
+                            num_processes=mp.cpu_count(),
                             block_shape=None,
                             num_blocks=None,
                             half_window_shape=None,
@@ -235,7 +231,7 @@ def generate_neurons_blocks(input_filename,
                             num_drmaa_cores=16,
                             debug=False,
                             **parameters):
-    # TODO: Move function into new module with its own command line interface.
+    # TODO: Move this function into a new module with its own command line interface.
     # TODO: Heavy refactoring required on this function.
 
     # Extract and validate file extensions.
@@ -243,27 +239,23 @@ def generate_neurons_blocks(input_filename,
     # Parse input filename and validate that the name is acceptable
     input_filename_details = pathHelpers.PathComponents(input_filename)
     # Clean up the extension so it fits the standard.
-    input_filename_ext = input_filename_details.extension
-    input_filename_ext = input_filename_ext.lower().lstrip(os.extsep)
-    if (input_filename_ext not in ["h5", "hdf5", "he5"]):
+    if (input_filename_details.extension.lower().lstrip(os.extsep) not in ["h5", "hdf5", "he5"]):
         raise Exception(
             "Input file with filename: \"" + input_filename + "\"" +
             " provided with an unknown file extension: \"" +
-            input_filename_ext + "\". If it is a supported " +
-            "format, please run the given file through " +
-            "nanshe_converter first before proceeding."
+            input_filename_details.extension + "\". If it is a supported " +
+            "format, please run the given file through nanshe_converter " +
+            "first before proceeding."
         )
 
     # Parse output filename and validate that the name is acceptable
     output_filename_details = pathHelpers.PathComponents(output_filename)
     # Clean up the extension so it fits the standard.
-    output_filename_ext = output_filename_details.extension
-    output_filename_ext = output_filename_ext.lower().lstrip(os.extsep)
-    if (output_filename_ext not in ["h5", "hdf5", "he5"]):
+    if (output_filename_details.extension.lower().lstrip(os.extsep) not in ["h5", "hdf5", "he5"]):
         raise Exception(
             "Output file with filename: \"" + output_filename + "\"" +
             " provided with an unknown file extension: \"" +
-            output_filename_ext + "\". If it is a supported " +
+            output_filename_details.extension + "\". If it is a supported " +
             "format, please run the given file through nanshe_converter " +
             "first before proceeding."
         )
@@ -398,7 +390,8 @@ def generate_neurons_blocks(input_filename,
     # the f0 calculation.
     if "extract_f0" in parameters["generate_neurons"]["preprocess_data"]:
         #assert (parameters["generate_neurons"]["preprocess_data"]["extract_f0"]["half_window_size"] == half_window_shape_array[0])
-        assert (parameters["generate_neurons"]["preprocess_data"]["extract_f0"]["half_window_size"] <= half_window_shape_array[0])
+        assert (parameters["generate_neurons"]["preprocess_data"][
+                "extract_f0"]["half_window_size"] <= half_window_shape_array[0])
 
     # Estimate bounds for each slice. Uses typical python [begin, end) for the
     # indices.
@@ -462,9 +455,8 @@ def generate_neurons_blocks(input_filename,
         half_border_shape_array, reps_after=2
     )
 
-    # Get slice information for the portion within
-    # `original_images_pared_slices["windowed"]`, which corresponds to
-    # `original_images_pared_slices["actual"]`.
+    # Get slice information for the portion within original_images_pared_slices["windowed"],
+    # which corresponds to original_images_pared_slices["actual"]
     #original_images_pared_slices["windowed_block_selection"][..., 0] = 0
     original_images_pared_slices["windowed_block_selection"][..., 1] = (
         original_images_pared_slices["actual"][..., 1] - original_images_pared_slices["actual"][..., 0]
@@ -557,8 +549,7 @@ def generate_neurons_blocks(input_filename,
             block_i = output_group_blocks[i_str]
 
             with h5py.File(intermediate_basename_i + os.extsep + "h5", "a") as each_block_file_handle:
-                # Create a soft link to the original images. But use the
-                # appropriate type of soft link depending on whether
+                # Create a soft link to the original images. But use the appropriate type of soft link depending on whether
                 # the input and output file are the same.
                 if "original_images" not in each_block_file_handle:
                     each_block_file_handle["original_images"] = h5py.ExternalLink(
@@ -938,10 +929,10 @@ def generate_neurons(original_images, run_stage="all", **parameters):
 
         if "dictionary_max_projection" not in generate_neurons.recorders.array_debug_recorder:
             generate_neurons.recorders.array_debug_recorder["dictionary_max_projection"] = xnumpy.add_singleton_op(
-                numpy.max,
-                new_dictionary,
-                axis=0
-            )
+            numpy.max,
+            new_dictionary,
+            axis=0
+        )
 
     if run_stage == "dictionary":
         return
