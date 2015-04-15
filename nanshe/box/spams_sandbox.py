@@ -91,7 +91,11 @@ def call_multiprocessing_queue_spams_trainDL(*args, **kwargs):
     """
 
     # Only necessary for dealing with SPAMS
-    import multiprocessing as mp
+    try:
+        import billiard as multiprocessing
+        mp = multiprocessing.get_context("spawn")
+    except ImportError:
+        import multiprocessing as mp
 
     out_queue = mp.Queue()
 
@@ -262,7 +266,11 @@ def call_multiprocessing_array_spams_trainDL(X, *args, **kwargs):
     """
 
     # Only necessary for dealing with SPAMS
-    import multiprocessing as mp
+    try:
+        import billiard as multiprocessing
+        mp = multiprocessing.get_context("spawn")
+    except ImportError:
+        import multiprocessing as mp
 
     # Just to make sure this exists in the new process. Shouldn't be necessary.
     import numpy
