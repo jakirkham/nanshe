@@ -28,7 +28,13 @@ __date__ = "$Apr 09, 2014 16:00:40 EDT$"
 import os
 import json
 import itertools
-import multiprocessing as mp
+
+try:
+    import billiard as multiprocessing
+    mp = multiprocessing.get_context("spawn")
+except ImportError:
+    import multiprocessing as mp
+
 import subprocess
 import time
 
