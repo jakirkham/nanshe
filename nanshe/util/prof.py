@@ -126,7 +126,8 @@ def log_call(logger,
              to_log_call=True,
              to_print_args=False,
              to_print_time=True,
-             to_print_exception=False):
+             to_print_exception=False,
+             to_print_result=False):
     """
         Takes a given logger and uses it to log entering and leaving the
         decorated callable. Intended to be used as a decorator that takes a few
@@ -165,6 +166,9 @@ def log_call(logger,
                                            function, which can be changed at
                                            runtime.
 
+            to_print_result(bool):         Whether to print the result from the
+                                           function call.
+
         Returns:
             log_call_decorator:            For performing the actual wrapping.
     """
@@ -189,7 +193,8 @@ def log_call(logger,
         @wrappers.static_variables(to_log_call=to_log_call,
                                    to_print_args=to_print_args,
                                    to_print_time=to_print_time,
-                                   to_print_exception=to_print_exception)
+                                   to_print_exception=to_print_exception,
+                                   to_print_result=to_print_result)
         def log_call_callable_wrapped(*args, **kwargs):
             """
                 This is what will replace the original callable. It will behave
@@ -242,6 +247,12 @@ def log_call(logger,
                     raise
                 end_time = time.time()
                 diff_time += (end_time - start_time)
+
+                # Log the result if needed.
+                if log_call_callable_wrapped.to_print_result:
+                    logger.debug(
+                        "Result: \"" + str(result) + "\"" + "\"."
+                    )
 
                 # Log that we have exited the callable in question.
                 logger.debug(
