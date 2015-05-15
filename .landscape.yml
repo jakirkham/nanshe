@@ -17,18 +17,6 @@ pyflakes:
     run: true
 pylint:
     run: true
-    disable:
-        # Skip complaint about invalid name. More often than not the names are
-        # clear and if anything follow this guideline; so, it is ignored.
-        - C0103
-        # Ignore complaint about superfluous parentheses after keywords.
-        - C0325
-        # Skip complaint about using star args as they have a very clear and
-        # frequent use in our codebase when forwarding arguments to nested
-        # callables.
-        - W0142
-        # Skip complaint about using backslash literals in multiline strings.
-        - W1401
 # Analyze our `setup.py`.
 pyroma:
     run: true
