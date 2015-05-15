@@ -17,6 +17,7 @@ pyflakes:
     run: true
 pylint:
     run: true
+    rcfile: pylintrc
 # Analyze our `setup.py`.
 pyroma:
     run: true
