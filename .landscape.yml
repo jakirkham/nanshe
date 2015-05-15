@@ -10,16 +10,6 @@ max-line-length: 79
 # Use some standard linting tools.
 pep8:
     full: true
-    disable:
-        # PEP8 says we shouldn't have any global variables before imports.
-        # Generally, this sounds like a good idea. However, it is nice to
-        # have our `__author__` and `__date__` lines near our module or
-        # package docstring, which technically are global variables.
-        # Hence, we ignore PEP8 here. To quote PEP8, "Consistency with
-        # this style guide is important. Consistency within a project is
-        # more important. Consistency within one module or function is
-        # most important."
-        - E402
 # Check docstring coverage and style.
 pep257:
     run: true
