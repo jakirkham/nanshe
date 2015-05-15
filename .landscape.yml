@@ -13,21 +13,6 @@ pep8:
 # Check docstring coverage and style.
 pep257:
     run: true
-    disable:
-        # Ignore constraint disallowing newlines to follow docstrings.
-        # We find having a newline there makes it easier to read on a
-        # quick pass.
-        - D202
-        # Ignore constraint about having a newline between class
-        # definition and docstrings.
-        - D203
-        # PEP257 expects the documentation to be indented the same as
-        # the code. We have preferred to indent it one time further as it
-        # makes it easier on the eye to note documentation from code on
-        # a quick pass. So, we suppress this constraint.
-        - D208
-        # Ignore suggestion about handling backslashes in docstrings.
-        - D301
 pyflakes:
     run: true
 pylint:
