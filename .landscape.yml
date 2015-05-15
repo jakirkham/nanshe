@@ -48,7 +48,7 @@ pylint:
         - C0103
         # Ignore complaint about superfluous parentheses after keywords.
         - C0325
-        # Skip complaint about using start args as they have a very clear
+        # Skip complaint about using star args as they have a very clear
         # and frequent use in our codebase when forwarding arguments to
         # nested callables.
         - W0142
