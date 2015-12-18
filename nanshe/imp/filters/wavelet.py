@@ -406,6 +406,7 @@ def transform(im0,
         imCur = im0.astype(numpy.float32)
 
 
+    ident_ker = vigra.filters.Kernel1D()
     for i in irange(1, scale.max() + 1):
         if include_intermediates:
             imPrev = imCur
@@ -414,11 +415,15 @@ def transform(im0,
         else:
             imPrev[:] = imCur
 
-        h_ker = binomial_1D_vigra_kernel(i)
-
+        h_ker_i = binomial_1D_vigra_kernel(i)
+        h_ker = tuple()
         for d in irange(len(scale)):
             if i <= scale[d]:
-                vigra.filters.convolveOneDimension(imCur, d, h_ker, out=imCur)
+                h_ker += (h_ker_i,)
+            else:
+                h_ker += (ident_ker,)
+
+        vigra.filters.convolve(imCur, h_ker, out=imCur)
 
         if include_intermediates or include_lower_scales:
             W[i - 1] = imPrev - imCur
