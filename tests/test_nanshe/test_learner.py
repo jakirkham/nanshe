@@ -6,7 +6,6 @@ import nose
 import nose.plugins
 import nose.plugins.attrib
 
-import imp
 import json
 import operator
 import os
@@ -24,14 +23,6 @@ import nanshe.io.hdf5.record
 import nanshe.syn.data
 
 import nanshe.learner
-
-
-has_spams = False
-try:
-    imp.find_module("spams")
-    has_spams = True
-except ImportError:
-    pass
 
 
 def setup_2d(a_callable):
@@ -167,20 +158,12 @@ def setup_2d(a_callable):
 
 
                 "generate_dictionary" : {
-                    "spams.trainDL" : {
-                        "K" : 10,
-                        "gamma2": 0,
-                        "gamma1": 0,
-                        "numThreads": 1,
-                        "batchsize": 256,
-                        "iter": 100,
-                        "lambda1": 0.2,
-                        "posD": True,
-                        "clean": True,
-                        "modeD": 0,
-                        "posAlpha": True,
-                        "mode": 2,
-                        "lambda2": 0
+                    "sklearn.decomposition.dict_learning_online" : {
+                        "n_jobs" : 1,
+                        "n_components" : 10,
+                        "n_iter" : 100,
+                        "batch_size" : 256,
+                        "alpha" : 0.2
                     }
                 },
 
@@ -292,20 +275,12 @@ def setup_2d(a_callable):
 
 
                 "generate_dictionary" : {
-                    "spams.trainDL" : {
-                        "K" : 10,
-                        "gamma2": 0,
-                        "gamma1": 0,
-                        "numThreads": 1,
-                        "batchsize": 256,
-                        "iter": 100,
-                        "lambda1": 0.2,
-                        "posD": True,
-                        "clean": True,
-                        "modeD": 0,
-                        "posAlpha": True,
-                        "mode": 2,
-                        "lambda2": 0
+                    "sklearn.decomposition.dict_learning_online" : {
+                        "n_jobs" : 1,
+                        "n_components" : 10,
+                        "n_iter" : 100,
+                        "batch_size" : 256,
+                        "alpha" : 0.2
                     }
                 },
 
@@ -632,20 +607,12 @@ def setup_3d(a_callable):
                     }
                 },
                 "generate_dictionary" : {
-                    "spams.trainDL" : {
-                        "gamma2" : 0,
-                        "gamma1" : 0,
-                        "numThreads" : 1,
-                        "K" : 10,
-                        "iter" : 100,
-                        "modeD" : 0,
-                        "posAlpha" : True,
-                        "clean" : True,
-                        "posD" : True,
-                        "batchsize" : 256,
-                        "lambda1" : 0.2,
-                        "lambda2" : 0,
-                        "mode" : 2
+                    "sklearn.decomposition.dict_learning_online" : {
+                        "n_jobs" : 1,
+                        "n_components" : 10,
+                        "n_iter" : 100,
+                        "batch_size" : 256,
+                        "alpha" : 0.2
                     }
                 }
             }
@@ -731,20 +698,12 @@ def setup_3d(a_callable):
                     }
                 },
                 "generate_dictionary" : {
-                    "spams.trainDL" : {
-                        "gamma2" : 0,
-                        "gamma1" : 0,
-                        "numThreads" : 1,
-                        "K" : 10,
-                        "iter" : 100,
-                        "modeD" : 0,
-                        "posAlpha" : True,
-                        "clean" : True,
-                        "posD" : True,
-                        "batchsize" : 256,
-                        "lambda1" : 0.2,
-                        "lambda2" : 0,
-                        "mode" : 2
+                    "sklearn.decomposition.dict_learning_online" : {
+                        "n_jobs" : 1,
+                        "n_components" : 10,
+                        "n_iter" : 100,
+                        "batch_size" : 256,
+                        "alpha" : 0.2
                     }
                 }
             }
@@ -905,11 +864,6 @@ def test_main_1():
 
 @nanshe.util.wrappers.with_setup_state(setup_2d, teardown_2d)
 def test_main_2():
-    if not has_spams:
-        raise nose.SkipTest(
-            "Cannot run this test without SPAMS being installed."
-        )
-
     executable = os.path.splitext(nanshe.learner.__file__)[0] + os.extsep + "py"
 
     argv = (executable, test_main_2.config_blocks_filename, test_main_2.hdf5_input_filepath, test_main_2.hdf5_output_filepath,)
@@ -956,11 +910,6 @@ def test_main_2():
 @nose.plugins.attrib.attr("DRMAA")
 @nanshe.util.wrappers.with_setup_state(setup_2d, teardown_2d)
 def test_main_3():
-    if not has_spams:
-        raise nose.SkipTest(
-            "Cannot run this test without SPAMS being installed."
-        )
-
     # Attempt to import drmaa.
     # If it fails to import, either the user has no intent in using it or forgot to install it.
     # If it imports, but fails to find symbols, then the user has not set DRMAA_LIBRARY_PATH or does not have libdrmaa.so.
@@ -1065,11 +1014,6 @@ def test_main_4():
 @nose.plugins.attrib.attr("3D")
 @nanshe.util.wrappers.with_setup_state(setup_3d, teardown_3d)
 def test_main_5():
-    if not has_spams:
-        raise nose.SkipTest(
-            "Cannot run this test without SPAMS being installed."
-        )
-
     executable = os.path.splitext(nanshe.learner.__file__)[0] + os.extsep + "py"
 
     argv = (executable, test_main_5.config_blocks_3D_filename, test_main_5.hdf5_input_3D_filepath, test_main_5.hdf5_output_3D_filepath,)
@@ -1116,11 +1060,6 @@ def test_main_5():
 @nose.plugins.attrib.attr("3D", "DRMAA")
 @nanshe.util.wrappers.with_setup_state(setup_3d, teardown_3d)
 def test_main_6():
-    if not has_spams:
-        raise nose.SkipTest(
-            "Cannot run this test without SPAMS being installed."
-        )
-
     # Attempt to import drmaa.
     # If it fails to import, either the user has no intent in using it or forgot to install it.
     # If it imports, but fails to find symbols, then the user has not set DRMAA_LIBRARY_PATH or does not have libdrmaa.so.
@@ -1219,11 +1158,6 @@ def test_generate_neurons_io_handler_1():
 
 @nanshe.util.wrappers.with_setup_state(setup_2d, teardown_2d)
 def test_generate_neurons_io_handler_2():
-    if not has_spams:
-        raise nose.SkipTest(
-            "Cannot run this test without SPAMS being installed."
-        )
-
     nanshe.learner.generate_neurons_io_handler(test_generate_neurons_io_handler_2.hdf5_input_filepath, test_generate_neurons_io_handler_2.hdf5_output_filepath, test_generate_neurons_io_handler_2.config_blocks_filename)
 
     assert os.path.exists(test_generate_neurons_io_handler_2.hdf5_output_filename)
@@ -1266,11 +1200,6 @@ def test_generate_neurons_io_handler_2():
 @nose.plugins.attrib.attr("DRMAA")
 @nanshe.util.wrappers.with_setup_state(setup_2d, teardown_2d)
 def test_generate_neurons_io_handler_3():
-    if not has_spams:
-        raise nose.SkipTest(
-            "Cannot run this test without SPAMS being installed."
-        )
-
     # Attempt to import drmaa.
     # If it fails to import, either the user has no intent in using it or forgot to install it.
     # If it imports, but fails to find symbols, then the user has not set DRMAA_LIBRARY_PATH or does not have libdrmaa.so.
@@ -1367,11 +1296,6 @@ def test_generate_neurons_io_handler_4():
 @nose.plugins.attrib.attr("3D")
 @nanshe.util.wrappers.with_setup_state(setup_3d, teardown_3d)
 def test_generate_neurons_io_handler_5():
-    if not has_spams:
-        raise nose.SkipTest(
-            "Cannot run this test without SPAMS being installed."
-        )
-
     nanshe.learner.generate_neurons_io_handler(test_generate_neurons_io_handler_5.hdf5_input_3D_filepath, test_generate_neurons_io_handler_5.hdf5_output_3D_filepath, test_generate_neurons_io_handler_5.config_blocks_3D_filename)
 
     assert os.path.exists(test_generate_neurons_io_handler_5.hdf5_output_3D_filename)
@@ -1414,11 +1338,6 @@ def test_generate_neurons_io_handler_5():
 @nose.plugins.attrib.attr("3D", "DRMAA")
 @nanshe.util.wrappers.with_setup_state(setup_3d, teardown_3d)
 def test_generate_neurons_io_handler_6():
-    if not has_spams:
-        raise nose.SkipTest(
-            "Cannot run this test without SPAMS being installed."
-        )
-
     # Attempt to import drmaa.
     # If it fails to import, either the user has no intent in using it or forgot to install it.
     # If it imports, but fails to find symbols, then the user has not set DRMAA_LIBRARY_PATH or does not have libdrmaa.so.
@@ -1555,11 +1474,6 @@ def test_generate_neurons_a_block_2():
 
 @nanshe.util.wrappers.with_setup_state(setup_2d, teardown_2d)
 def test_generate_neurons_blocks_1():
-    if not has_spams:
-        raise nose.SkipTest(
-            "Cannot run this test without SPAMS being installed."
-        )
-
     nanshe.learner.generate_neurons_blocks(test_generate_neurons_blocks_1.hdf5_input_filepath, test_generate_neurons_blocks_1.hdf5_output_filepath, **test_generate_neurons_blocks_1.config_blocks["generate_neurons_blocks"])
 
     assert os.path.exists(test_generate_neurons_blocks_1.hdf5_output_filename)
@@ -1602,11 +1516,6 @@ def test_generate_neurons_blocks_1():
 @nose.plugins.attrib.attr("DRMAA")
 @nanshe.util.wrappers.with_setup_state(setup_2d, teardown_2d)
 def test_generate_neurons_blocks_2():
-    if not has_spams:
-        raise nose.SkipTest(
-            "Cannot run this test without SPAMS being installed."
-        )
-
     # Attempt to import drmaa.
     # If it fails to import, either the user has no intent in using it or forgot to install it.
     # If it imports, but fails to find symbols, then the user has not set DRMAA_LIBRARY_PATH or does not have libdrmaa.so.
@@ -1661,11 +1570,6 @@ def test_generate_neurons_blocks_2():
 @nose.plugins.attrib.attr("3D")
 @nanshe.util.wrappers.with_setup_state(setup_3d, teardown_3d)
 def test_generate_neurons_blocks_3():
-    if not has_spams:
-        raise nose.SkipTest(
-            "Cannot run this test without SPAMS being installed."
-        )
-
     nanshe.learner.generate_neurons_blocks(test_generate_neurons_blocks_3.hdf5_input_3D_filepath, test_generate_neurons_blocks_3.hdf5_output_3D_filepath, **test_generate_neurons_blocks_3.config_blocks_3D["generate_neurons_blocks"])
 
     assert os.path.exists(test_generate_neurons_blocks_3.hdf5_output_3D_filename)
@@ -1708,11 +1612,6 @@ def test_generate_neurons_blocks_3():
 @nose.plugins.attrib.attr("3D", "DRMAA")
 @nanshe.util.wrappers.with_setup_state(setup_3d, teardown_3d)
 def test_generate_neurons_blocks_4():
-    if not has_spams:
-        raise nose.SkipTest(
-            "Cannot run this test without SPAMS being installed."
-        )
-
     # Attempt to import drmaa.
     # If it fails to import, either the user has no intent in using it or forgot to install it.
     # If it imports, but fails to find symbols, then the user has not set DRMAA_LIBRARY_PATH or does not have libdrmaa.so.
