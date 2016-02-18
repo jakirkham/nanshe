@@ -109,7 +109,8 @@ def setup_2d(a_callable):
                     "n_components" : 10,
                     "n_iter" : 100,
                     "batch_size" : 256,
-                    "alpha" : 0.2
+                    "alpha" : 0.2,
+                    "dict_positive" : True
                 }
             }
         }
@@ -163,7 +164,8 @@ def setup_2d(a_callable):
                         "n_components" : 10,
                         "n_iter" : 100,
                         "batch_size" : 256,
-                        "alpha" : 0.2
+                        "alpha" : 0.2,
+                        "dict_positive" : True
                     }
                 },
 
@@ -280,7 +282,8 @@ def setup_2d(a_callable):
                         "n_components" : 10,
                         "n_iter" : 100,
                         "batch_size" : 256,
-                        "alpha" : 0.2
+                        "alpha" : 0.2,
+                        "dict_positive" : True
                     }
                 },
 
@@ -525,7 +528,8 @@ def setup_3d(a_callable):
                     "n_components" : 10,
                     "n_iter" : 100,
                     "batch_size" : 256,
-                    "alpha" : 0.2
+                    "alpha" : 0.2,
+                    "dict_positive" : True
                 }
             }
         }
@@ -612,7 +616,8 @@ def setup_3d(a_callable):
                         "n_components" : 10,
                         "n_iter" : 100,
                         "batch_size" : 256,
-                        "alpha" : 0.2
+                        "alpha" : 0.2,
+                        "dict_positive" : True
                     }
                 }
             }
@@ -703,7 +708,8 @@ def setup_3d(a_callable):
                         "n_components" : 10,
                         "n_iter" : 100,
                         "batch_size" : 256,
-                        "alpha" : 0.2
+                        "alpha" : 0.2,
+                        "dict_positive" : True
                     }
                 }
             }
