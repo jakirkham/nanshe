@@ -7,14 +7,9 @@ echo $SGE_CONFIG_DIR
 sudo sed -i -r "s/^(127.0.0.1\s)(localhost\.localdomain\slocalhost)/\1localhost localhost.localdomain ${HOSTNAME} /" /etc/hosts
 sudo cp /etc/resolv.conf /etc/resolv.conf.orig
 sudo echo "domain ${HOSTNAME}" >> /etc/resolv.conf
-# Update everything.
-sudo apt-get -y update -qq
 echo "gridengine-master shared/gridenginemaster string ${HOSTNAME}" | sudo debconf-set-selections
 echo "gridengine-master shared/gridenginecell string default" | sudo debconf-set-selections
 echo "gridengine-master shared/gridengineconfig boolean true" | sudo debconf-set-selections
-sudo apt-get -y install gridengine-common gridengine-master
-# Do this in a separate step to give master time to start
-sudo apt-get -y install libdrmaa1.0 gridengine-client gridengine-exec
 sudo cp ${SGE_ROOT}/default/common/act_qmaster ${SGE_ROOT}/default/common/act_qmaster.orig
 sudo bash -c "echo $HOSTNAME > ${SGE_ROOT}/default/common/act_qmaster"
 sudo service gridengine-master restart
@@ -82,5 +77,3 @@ rm test.sh*
 set +e
 popd &>/dev/null
 rm -rf /tmp/test_gridengine &>/dev/null
-# Clean apt-get so we don't have a bunch of junk left over from our build.
-sudo apt-get clean
