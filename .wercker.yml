@@ -26,6 +26,11 @@ build:
                 conda clean -tipsy
 
         - script:
+            name: Install SPAMS for testing.
+            code: |-
+                conda install -y spams
+
+        - script:
             name: Install development copy of scikit-learn.
             code: |-
                 touch /var/lib/rpm/*
