@@ -46,6 +46,10 @@ install:
    - conda update --use-local -n testenv --all
    - conda install --use-local -n testenv nanshe==$VERSION
    - source activate testenv
+   # Install development version of scikit-learn.
+   - conda remove -y scikit-learn
+   - conda install -y cython
+   - pip install git+https://github.com/jakirkham/scikit-learn.git@dict_pos_constrt#egg=scikit-learn
    # Optionally install GPL dependencies.
    - if [[ $USE_GPL == true ]]; then conda install --use-local -n testenv pyfftw; fi
    - if [[ $PYTHON_VERSION == "2.7" ]] && [[ $USE_GPL == true ]]; then conda install --use-local -n testenv python-spams; fi

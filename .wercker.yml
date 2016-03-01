@@ -26,6 +26,14 @@ build:
                 conda clean -tipsy
 
         - script:
+            name: Install development copy of scikit-learn.
+            code: |-
+                yum install -y gcc gcc-c++
+                conda install -y cython
+                conda remove -y scikit-learn
+                pip install git+https://github.com/jakirkham/scikit-learn.git@dict_pos_constrt#egg=scikit-learn
+
+        - script:
             name: Install dependencies for cluster support.
             code: |-
                 conda install -y drmaa
