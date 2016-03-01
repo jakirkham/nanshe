@@ -28,6 +28,7 @@ build:
         - script:
             name: Install development copy of scikit-learn.
             code: |-
+                touch /var/lib/rpm/*
                 yum install -y gcc gcc-c++
                 conda install -y cython
                 conda remove -y scikit-learn
