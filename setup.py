@@ -156,6 +156,7 @@ setup(
     test_suite="nose.collector",
     data_files=[("", ["LICENSE.txt"])],
     zip_safe=True,
+    conda_features=["nomkl", "openblas"],
     conda_import_tests=False,
     conda_command_tests=False
 )
