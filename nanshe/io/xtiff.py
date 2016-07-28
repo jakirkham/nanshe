@@ -455,7 +455,9 @@ def convert_tiffs(new_tiff_filenames,
             new_hdf5_dataset_name,
             new_hdf5_dataset_shape,
             new_hdf5_dataset_dtype,
-            chunks=True
+            chunks=True,
+            compression="gzip",
+            compression_opts=2
         )
         new_hdf5_dataset.attrs.create(
             "filenames",
@@ -469,7 +471,9 @@ def convert_tiffs(new_tiff_filenames,
         new_hdf5_descriptions_dataset = new_hdf5_group.create_dataset(
             "_".join([new_hdf5_dataset_name, "descriptions"]),
             shape=new_hdf5_dataset_shape[0:1],
-            dtype=h5py.special_dtype(vlen=unicode)
+            dtype=h5py.special_dtype(vlen=unicode),
+            compression="gzip",
+            compression_opts=2
         )
         new_hdf5_dataset.attrs["descriptions"] = (
             new_hdf5_descriptions_dataset.file.filename +
