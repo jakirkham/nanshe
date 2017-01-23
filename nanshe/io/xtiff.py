@@ -302,6 +302,11 @@ def get_standard_tiff_data(new_tiff_filename,
     elif (new_tiff_array.ndim == 4):
         # Has no z. So, add this.
         new_tiff_array = xnumpy.add_singleton_axis_beginning(new_tiff_array)
+    elif (new_tiff_array.ndim == 2):
+        # Has no z, channel or time. So, add these.
+        new_tiff_array = xnumpy.add_singleton_axis_beginning(new_tiff_array)
+        new_tiff_array = xnumpy.add_singleton_axis_end(new_tiff_array)
+        new_tiff_array = xnumpy.add_singleton_axis_end(new_tiff_array)
     else:
         raise Exception(
             "Invalid dimensionality for TIFF. Found shape to be \"" +
