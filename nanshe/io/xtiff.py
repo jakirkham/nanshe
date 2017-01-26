@@ -457,19 +457,29 @@ def convert_tiffs(new_tiff_filenames,
             new_hdf5_dataset_dtype,
             chunks=True
         )
-        new_hdf5_dataset.attrs.create(
-            "filenames",
-            new_hdf5_dataset_filenames,
-            shape=new_hdf5_dataset_filenames.shape,
-            dtype=h5py.special_dtype(vlen=unicode)
-        )
-        new_hdf5_dataset.attrs["offsets"] = new_hdf5_dataset_offsets
         # Workaround required due to this issue
         # ( https://github.com/h5py/h5py/issues/289 ).
+        new_hdf5_filenames_dataset = new_hdf5_group.create_dataset(
+            "_".join([new_hdf5_dataset_name, "filenames"]),
+            shape=new_hdf5_dataset_filenames.shape[0:1],
+            dtype=h5py.special_dtype(vlen=unicode)
+        )
+        new_hdf5_offsets_dataset = new_hdf5_group.create_dataset(
+            "_".join([new_hdf5_dataset_name, "offsets"]),
+            data=new_hdf5_dataset_offsets
+        )
         new_hdf5_descriptions_dataset = new_hdf5_group.create_dataset(
             "_".join([new_hdf5_dataset_name, "descriptions"]),
             shape=new_hdf5_dataset_shape[0:1],
             dtype=h5py.special_dtype(vlen=unicode)
+        )
+        new_hdf5_dataset.attrs["filenames"] = (
+            new_hdf5_filenames_dataset.file.filename +
+            new_hdf5_filenames_dataset.name
+        )
+        new_hdf5_dataset.attrs["offsets"] = (
+            new_hdf5_offsets_dataset.file.filename +
+            new_hdf5_offsets_dataset.name
         )
         new_hdf5_dataset.attrs["descriptions"] = (
             new_hdf5_descriptions_dataset.file.filename +
@@ -501,5 +511,6 @@ def convert_tiffs(new_tiff_filenames,
             new_hdf5_dataset_axis_pos_next = new_hdf5_dataset_axis_pos + \
                                              len(each_new_tiff_array)
             new_hdf5_dataset[new_hdf5_dataset_axis_pos:new_hdf5_dataset_axis_pos_next] = each_new_tiff_array
+            new_hdf5_filenames_dataset[new_hdf5_dataset_axis_pos:new_hdf5_dataset_axis_pos_next] = each_new_tiff_filename
             new_hdf5_descriptions_dataset[new_hdf5_dataset_axis_pos:new_hdf5_dataset_axis_pos_next] = each_new_tiff_description
             new_hdf5_dataset_axis_pos = new_hdf5_dataset_axis_pos_next
