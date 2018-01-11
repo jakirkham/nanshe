@@ -12,6 +12,7 @@ import numpy
 import h5py
 
 import nanshe.io.hdf5.serializers
+import nanshe.io.disk
 
 
 class TestSerializers(object):
@@ -246,7 +247,7 @@ class TestSerializers(object):
 
         self.temp_hdf5_file = None
 
-        shutil.rmtree(self.temp_dir)
+        nanshe.io.disk.rmtree(self.temp_dir)
 
         self.temp_dir = ""
 
