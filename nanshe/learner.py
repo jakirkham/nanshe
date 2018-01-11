@@ -595,7 +595,6 @@ def generate_neurons_blocks(input_filename,
             ready_processes[-1][1].outputPath = "localhost:" + each_arg_pack[-2]
             ready_processes[-1][1].errorPath = "localhost:" + each_arg_pack[-1]
             ready_processes[-1][1].workingDirectory = os.getcwd()
-            ready_processes[-1][1].nativeSpecification = "-pe batch " + str(num_drmaa_cores)
 
 
         running_processes = []
