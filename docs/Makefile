@@ -62,6 +62,11 @@ clean:
 rst:
 	$(SPHINXAPIDOC) -f -T -e -M -o . .. ../setup.py ../tests ../versioneer.py
 
+coverage: rst
+	$(SPHINXBUILD) -b coverage $(ALLSPHINXOPTS) $(BUILDDIR)/coverage
+	@echo
+	@echo "Build finished. The coverage data are in $(BUILDDIR)/coverage."
+
 html: rst
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo

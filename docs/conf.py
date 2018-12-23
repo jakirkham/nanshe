@@ -37,6 +37,7 @@ sys.path.insert(0, os.path.abspath('..'))
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.coverage',
     'sphinx.ext.viewcode',
     'sphinx.ext.todo',
     'sphinx.ext.napoleon'
@@ -346,3 +347,9 @@ epub_exclude_files = ['search.html']
 
 # Whether to include the TODOs in the documentation.
 todo_include_todos = True
+
+
+# -- Options for Coverage extension  ------------------------------------------
+
+# Whether to skip undocumented in source.
+coverage_skip_undoc_in_source = True
